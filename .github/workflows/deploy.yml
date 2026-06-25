@@ -1,34 +1,30 @@
 name: Kaggle Data Cloud CI-CD Pipeline
 
-# 1. TRIGGERS: ఈ పైప్‌లైన్ ఎప్పుడు అలర్ట్ అవ్వాలి?
 on:
   push:
-    branches: [ main ] # మెయిన్ బ్రాంచ్ లోకి కోడ్ రాగానే ఆటోమేటిక్‌గా రన్ అవ్వాలి బాసు
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 
-# 2. JOBS: గిట్‌హబ్ రోబోట్ ఏమేం పనులు చేయాలి?
 jobs:
   continuous-integration:
     name: Code Validation & Quality Check
-    runs-on: ubuntu-latest # గిట్‌హబ్ బ్యాకెండ్‌ లో ఒక ఉబుంటు లైనక్స్ కంప్యూటర్‌ని మన కోసం ఆన్ చేస్తుంది
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout Repository Code
-      uses: actions/checkout@v4 # మన గిట్‌హబ్ లో ఉన్న కోడ్ మొత్తాన్ని ఆ ఉబుంటు కంప్యూటర్ లోకి తెచ్చుకుంటుంది
+      uses: actions/checkout@v4
 
     - name: Set up Python Environment
       uses: actions/setup-python@v5
       with:
-        python-version: '3.10' # పైథాన్ 3.10 వెర్షన్ సెట్ చేస్తుంది
+        python-version: '3.10'
 
     - name: Install Python Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 # కోడ్ లో ఏవైనా తప్పులు ఉన్నాయో లేదో వెతికే టూల్
+        pip install flake8
 
     - name: Lint Code for Syntax Errors
       run: |
-        # flake8 మన కోడ్ లో స్పెల్లింగ్ తప్పులు లేదా సింటాక్స్ తప్పులు ఉంటే ఇక్కడే పైప్‌లైన్‌ని ఆపేస్తుంది
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        print("✅ Code Validation Success!")
